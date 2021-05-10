@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 
 // solhint-disable-next-line
-abstract contract WhaleStreetToken is ERC721, Ownable {
+abstract contract AuctionToken is ERC721, Ownable {
 
     using SafeMath for uint256;
     using Counters for Counters.Counter;

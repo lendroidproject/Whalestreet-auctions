@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: https://github.com/lendroidproject/protocol.2.0/blob/master/LICENSE.md
 pragma solidity 0.7.5;
 
-import "../../auctions/ArtBlocksAuctions.sol";
+import "../../auctions/VRFAuctions.sol";
 
 
-contract KovanArtBlocksAuctions is ArtBlocksAuctions {
+contract KovanArtBlocksAuctions is VRFAuctions {
 
     /**
-     * Constructor inherits ArtBlocksAuctions
+     * Constructor inherits VRFAuctions
      *
      * Network: Kovan
      * Chainlink VRF Coordinator address: 0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9
@@ -17,7 +17,7 @@ contract KovanArtBlocksAuctions is ArtBlocksAuctions {
      */
     // solhint-disable-next-line func-visibility
     constructor(address auctionCurveAddress, address purchaseTokenAddress, address keyMinterAddress)
-        ArtBlocksAuctions(auctionCurveAddress, purchaseTokenAddress,// solhint-disable-line func-visibility
+        VRFAuctions(auctionCurveAddress, purchaseTokenAddress,// solhint-disable-line func-visibility
             keyMinterAddress,
             0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9,// VRF Coordinator
             0xa36085F69e2889c224210F603D836748e7dC0088,// LINK Token

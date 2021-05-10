@@ -138,7 +138,8 @@ abstract contract VRFConsumerBase is VRFRequestIDBase {
     * @dev concurrent requests. It is passed as the first argument to
     * @dev fulfillRandomness.
     */
-    function requestRandomness(bytes32 _keyHash, uint256 _fee, uint256 _seed) internal returns (bytes32 requestId) {
+    function requestRandomness(bytes32 _keyHash, uint256 _fee, uint256 _seed) internal virtual
+    returns (bytes32 requestId) {
         LINK.transferAndCall(vrfCoordinator, _fee, abi.encode(_keyHash, _seed));
         // This is the seed passed to VRFCoordinator. The oracle will mix this with
         // the hash of the block containing this request to obtain the seed/input

@@ -32,17 +32,20 @@ contract DefaultKeyMinter is IRandomMinter, Ownable {
     }
 
     function mintWithRandomness(uint256 randomResult, address to) public onlyOwner override returns(
-        address newTokenAddress, uint256 newTokenId) {
+        address newTokenAddress, uint256 newTokenId, uint256 feePercentage) {
         newTokenAddress = address(auctionToken);
         require(newTokenAddress != address(0), "auctionToken address is zero");
         require((randomResult > 0) && (randomResult <= 100), "Invalid randomResult");
         string memory tokenUri;
         if (randomResult > 0 && randomResult <= 10) {
             tokenUri = tokenUris[Rarity.LEGENDARY];
+            feePercentage = feePercentages[Rarity.LEGENDARY];
         } else if (randomResult > 15 && randomResult <= 30) {
             tokenUri = tokenUris[Rarity.UNIQUE];
+            feePercentage = feePercentages[Rarity.UNIQUE];
         } else {
             tokenUri = tokenUris[Rarity.REGULAR];
+            feePercentage = feePercentages[Rarity.REGULAR];
         }
         newTokenId = auctionToken.getNextTokenId();
         auctionToken.mintToAndSetTokenURI(to, tokenUri);

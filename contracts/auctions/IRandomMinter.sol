@@ -7,7 +7,7 @@ pragma solidity 0.7.5;
  */
 interface IRandomMinter {
     function mintWithRandomness(uint256 randomResult, address to) external returns(
-        address newTokenAddress, uint256 newTokenId);
+        address newTokenAddress, uint256 newTokenId, uint256 feePercentage);
 
     function transferOwnership(address newOwner) external;
 

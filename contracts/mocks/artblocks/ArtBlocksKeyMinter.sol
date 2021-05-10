@@ -36,7 +36,7 @@ contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
     }
 
     function mintWithRandomness(uint256 randomResult, address to) public onlyOwner override returns(
-        address newTokenAddress, uint256 newTokenId) {
+        address newTokenAddress, uint256 newTokenId, uint256 feePercentage) {
         newTokenAddress = address(auctionToken);
         require(newTokenAddress != address(0), "auctionToken address is zero");
         require((randomResult > 0) && (randomResult <= 100), "Invalid randomResult");
@@ -45,12 +45,15 @@ contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
         if (randomResult > 0 && randomResult <= 10) {
             projectId = artblocksProjectIds[Rarity.LEGENDARY];
             artist = artblocksArtistAddresses[Rarity.LEGENDARY];
+            feePercentage = feePercentages[Rarity.LEGENDARY];
         } else if (randomResult > 15 && randomResult <= 30) {
             projectId = artblocksProjectIds[Rarity.UNIQUE];
             artist = artblocksArtistAddresses[Rarity.UNIQUE];
+            feePercentage = feePercentages[Rarity.UNIQUE];
         } else {
             projectId = artblocksProjectIds[Rarity.REGULAR];
             artist = artblocksArtistAddresses[Rarity.REGULAR];
+            feePercentage = feePercentages[Rarity.REGULAR];
         }
         newTokenId = auctionToken.mint(to, projectId, artist);
     }

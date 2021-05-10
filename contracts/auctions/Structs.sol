@@ -8,6 +8,7 @@ struct DefiKey {
     uint256 timestamp;
     address auctionTokenAddress;
     uint256 auctionTokenId;
+    uint256 feePercentage;
     address account;
     bytes32 requestId;
     uint256 randomness;
