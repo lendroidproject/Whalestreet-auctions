@@ -1,1 +1,1 @@
-require("./auctions/test.ArtBlocksAuctions.js");
+require("./auctions/test.InHouseAuctions.js");
