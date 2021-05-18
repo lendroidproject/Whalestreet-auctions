@@ -17,6 +17,7 @@ abstract contract MockVRFConsumerBase is VRFConsumerBase {
         lastRequestId = lastRequestId.add(1);
         uint256 randomness = lastRequestId % 100;
         fulfillRandomness(bytes32(lastRequestId), randomness);
+        return bytes32(lastRequestId);
     }
 
 }

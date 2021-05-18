@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: https://github.com/lendroidproject/protocol.2.0/blob/master/LICENSE.md
 pragma solidity 0.7.5;
-pragma abicoder v2;
+// pragma abicoder v2;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
@@ -8,6 +9,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./IAuction.sol";
 import "./IRandomMinter.sol";
 import "./IAuctionCurve.sol";
+import "./Structs.sol";
 
 // solhint-disable-next-line
 abstract contract BaseAuctions is IAuction, Ownable {
@@ -61,6 +63,10 @@ abstract contract BaseAuctions is IAuction, Ownable {
 
     function percentageFromRandomness(uint256 randomness) public pure override returns (uint256) {
         return randomness.mod(100);
+    }
+
+    function currentEpoch() public view returns (uint256) {
+        return auctionCurve.currentEpoch();
     }
 
     function currentPrice() public view override returns (uint256) {
