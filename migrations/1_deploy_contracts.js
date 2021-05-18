@@ -1,7 +1,7 @@
 var MockPacemaker = artifacts.require("MockPacemaker");
 var Mock$HRIMP = artifacts.require("Mock$HRIMP");
+var MockLinearCurveWithNegativeSlope = artifacts.require("MockLinearCurveWithNegativeSlope");
 var AuctionToken = artifacts.require("AuctionToken");
-var LinearCurveWithNegativeSlope = artifacts.require("LinearCurveWithNegativeSlope");
 var DefaultKeyMinter = artifacts.require("DefaultKeyMinter");
 var MockVRFAuctions = artifacts.require("MockVRFAuctions");
 
@@ -11,21 +11,21 @@ module.exports = function(deployer) {
             return deployer.deploy(Mock$HRIMP);
         })
         .then(function() {
-            return deployer.deploy(LinearCurveWithNegativeSlope);
+            return deployer.deploy(MockLinearCurveWithNegativeSlope);
         })
         .then(function() {
-            return deployer.deploy(AuctionToken);
+            return deployer.deploy(AuctionToken, "Test Auction", "TNFT");
         })
         .then(function() {
             return deployer.deploy(DefaultKeyMinter, AuctionToken.address);
         })
         .then(function() {
             return deployer.deploy(MockVRFAuctions,
-                LinearCurveWithNegativeSlope.address, Mock$HRIMP.address, DefaultKeyMinter.address,
-                0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B,// VRF Coordinator
-                0x01BE23585060835E02B77ef475b0Cc51aA1e0709,// LINK Token
-                0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311,// keyHash
-                0.1 * 10 ** 18// 0.1 LINK
+                MockLinearCurveWithNegativeSlope.address, Mock$HRIMP.address, DefaultKeyMinter.address,
+                "0xA62CD0D666A779337281A6Df80f48678679Ee3Cb", // VRF Coordinator
+                "0x587F590DFf46fdFb5C73F580C665aee257351660", // LINK Token
+                "0x8a962b8a9a6ace7378310449bf5cc8fd4c369774e7de097ff7a504f05680235e", // keyHash
+                "100000000000000000" // 0.1 LINK
             );
         });
 };

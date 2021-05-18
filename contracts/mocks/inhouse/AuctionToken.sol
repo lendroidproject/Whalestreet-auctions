@@ -8,12 +8,15 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 
 // solhint-disable-next-line
-abstract contract AuctionToken is ERC721, Ownable {
+contract AuctionToken is ERC721, Ownable {
 
     using SafeMath for uint256;
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdTracker;
+
+    // solhint-disable-next-line no-empty-blocks
+    constructor(string memory name, string memory symbol) ERC721(name, symbol) {}
 
     function tokenIdExists(uint256 tokenId) external view returns (bool) {
         return _exists(tokenId);

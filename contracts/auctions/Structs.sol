@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: https://github.com/lendroidproject/protocol.2.0/blob/master/LICENSE.md
 pragma solidity 0.7.5;
+pragma experimental ABIEncoderV2;
 
 /* solhint-disable */
 struct DefiKey {

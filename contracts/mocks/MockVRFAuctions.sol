@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: https://github.com/lendroidproject/protocol.2.0/blob/master/LICENSE.md
 pragma solidity 0.7.5;
-pragma abicoder v2;
+// pragma abicoder v2;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "../auctions/BaseAuctions.sol";
 import "./MockVRFConsumerBase.sol";
 
 // solhint-disable-next-line
-abstract contract MockVRFAuctions is BaseAuctions, MockVRFConsumerBase {
+contract MockVRFAuctions is BaseAuctions, MockVRFConsumerBase {
 
     using SafeERC20 for IERC20;
 
