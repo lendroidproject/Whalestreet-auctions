@@ -4,6 +4,7 @@ pragma solidity 0.7.5;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./IAuction.sol";
@@ -14,7 +15,7 @@ import "./Structs.sol";
 // solhint-disable-next-line
 abstract contract BaseAuctions is IAuction, Ownable {
 
-    using SafeMath for uint256;
+    using Address for address;
     using SafeERC20 for IERC20;
 
     // calulations
@@ -37,6 +38,11 @@ abstract contract BaseAuctions is IAuction, Ownable {
         keyMinter.transferOwnership(newOwner);
     }
 
+    function setAuctionCurve(address auctionCurveAddress) external override onlyOwner {
+        require(auctionCurveAddress.isContract(), "{setAuctionCurve} : invalid auctionCurveAddress");
+        auctionCurve = IAuctionCurve(auctionCurveAddress);
+    }
+
     /**
     * @notice Safety function to handle accidental / excess token transfer to the contract
     */
@@ -47,14 +53,6 @@ abstract contract BaseAuctions is IAuction, Ownable {
 
     function totalDefiKeys() external view override returns (uint256) {
         return defiKeys.length;
-    }
-
-    function percentageFromRandomness(uint256 randomness) public pure override returns (uint256) {
-        return randomness.mod(100);
-    }
-
-    function currentEpoch() public view returns (uint256) {
-        return auctionCurve.currentEpoch();
     }
 
     function currentPrice() public view override returns (uint256) {

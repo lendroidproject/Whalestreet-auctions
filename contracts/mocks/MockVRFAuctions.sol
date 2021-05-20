@@ -10,6 +10,7 @@ import "./MockVRFConsumerBase.sol";
 // solhint-disable-next-line
 contract MockVRFAuctions is BaseAuctions, MockVRFConsumerBase {
 
+    using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
     // vrf
@@ -33,21 +34,21 @@ contract MockVRFAuctions is BaseAuctions, MockVRFConsumerBase {
             fee = vrfFee;
         }
 
-    function setKeyHash(bytes32 _keyhash) external override onlyOwner {
+    function setKeyHash(bytes32 _keyhash) external onlyOwner {
         keyHash = _keyhash;
     }
 
-    function setFee(uint256 _fee) external override onlyOwner {
+    function setFee(uint256 _fee) external onlyOwner {
         fee = _fee;
     }
 
     function purchase() external {
-        require(keyMinter.currentOwner() == address(this), "{purchase} : Contract is not owner of distribution");
-        require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
-        require(currentPrice() > 0, "Current price is 0");
+        require(keyMinter.currentOwner() == address(this), "{purchase} : Contract is not owner of keyMinter");
+        require(currentPrice() > 0, "{purchase} : Current price is 0");
 
         // random number
-        bytes32 requestId = requestRandomness(keyHash, fee, uint256(address(this)));
+        /* bytes32 requestId = requestRandomness(keyHash, fee, uint256(address(this))); */
+        bytes32 requestId = bytes32(0);
         requestIdToKeyId[requestId] = defiKeys.length;
         DefiKey memory newKey = DefiKey({
             epoch: auctionCurve.currentEpoch(),
@@ -66,6 +67,10 @@ contract MockVRFAuctions is BaseAuctions, MockVRFConsumerBase {
         purchaseToken.safeTransferFrom(msg.sender, address(this), newKey.amount);
 
         emit PurchaseMade(msg.sender, newKey.epoch, newKey.amount);
+    }
+
+    function percentageFromRandomness(uint256 randomness) public pure returns (uint256) {
+        return randomness.mod(100);
     }
 
     // solhint-disable-next-line no-unused-vars

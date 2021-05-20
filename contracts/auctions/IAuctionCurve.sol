@@ -11,11 +11,11 @@ import "./Structs.sol";
  */
 interface IAuctionCurve {
 
-    function epochFromTimestamp(uint256 timestamp) external pure virtual returns (uint256);
+    function epochFromTimestamp(uint256 timestamp) external pure returns (uint256);
 
-    function epochStartTimeFromTimestamp(uint256 timestamp) external pure virtual returns (uint256);
+    function epochStartTimeFromTimestamp(uint256 timestamp) external pure returns (uint256);
 
-    function epochEndTimeFromTimestamp(uint256 timestamp) external pure virtual returns (uint256);
+    function epochEndTimeFromTimestamp(uint256 timestamp) external pure returns (uint256);
 
     function currentEpoch() external view returns (uint256);
 

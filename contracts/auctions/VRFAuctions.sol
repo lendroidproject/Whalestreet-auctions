@@ -11,6 +11,7 @@ import "./Structs.sol";
 // solhint-disable-next-line
 abstract contract VRFAuctions is BaseAuctions, VRFConsumerBase {
 
+    using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
     // vrf
@@ -34,18 +35,18 @@ abstract contract VRFAuctions is BaseAuctions, VRFConsumerBase {
             fee = vrfFee;
         }
 
-    function setKeyHash(bytes32 _keyhash) external override onlyOwner {
+    function setKeyHash(bytes32 _keyhash) external onlyOwner {
         keyHash = _keyhash;
     }
 
-    function setFee(uint256 _fee) external override onlyOwner {
+    function setFee(uint256 _fee) external onlyOwner {
         fee = _fee;
     }
 
     function purchase() external {
-        require(keyMinter.currentOwner() == address(this), "{purchase} : Contract is not owner of distribution");
-        require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
-        require(currentPrice() > 0, "Current price is 0");
+        require(keyMinter.currentOwner() == address(this), "{purchase} : Contract is not owner of keyMinter");
+        require(LINK.balanceOf(address(this)) >= fee, "{purchase} : Not enough LINK - fill contract with faucet");
+        require(currentPrice() > 0, "{purchase} : Current price is 0");
 
         // random number
         bytes32 requestId = requestRandomness(keyHash, fee, uint256(address(this)));
@@ -67,6 +68,10 @@ abstract contract VRFAuctions is BaseAuctions, VRFConsumerBase {
         purchaseToken.safeTransferFrom(msg.sender, address(this), newKey.amount);
 
         emit PurchaseMade(msg.sender, newKey.epoch, newKey.amount);
+    }
+
+    function percentageFromRandomness(uint256 randomness) public pure returns (uint256) {
+        return randomness.mod(100);
     }
 
     // solhint-disable-next-line no-unused-vars
