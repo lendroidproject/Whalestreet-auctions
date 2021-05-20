@@ -15,7 +15,7 @@ contract AuctionToken is ERC721, Ownable {
 
     Counters.Counter private _tokenIdTracker;
 
-    // solhint-disable-next-line no-empty-blocks
+    // solhint-disable-next-line
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {}
 
     function tokenIdExists(uint256 tokenId) external view returns (bool) {

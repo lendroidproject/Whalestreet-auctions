@@ -12,6 +12,7 @@ abstract contract MockVRFConsumerBase is VRFConsumerBase {
 
     uint256 private lastRequestId;
 
+    // solhint-disable-next-line no-unused-vars
     function requestRandomness(bytes32 _keyHash, uint256 _fee, uint256 _seed) internal override
     returns (bytes32 requestId) {
         lastRequestId = lastRequestId.add(1);

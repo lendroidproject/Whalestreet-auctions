@@ -22,7 +22,7 @@ abstract contract Pacemaker {
         @notice Displays the epoch which contains the given timestamp
         @return uint256 : Epoch value
     */
-    function epochFromTimestamp(uint256 timestamp) public pure returns (uint256) {
+    function epochFromTimestamp(uint256 timestamp) public pure virtual returns (uint256) {
         if (timestamp > HEART_BEAT_START_TIME) {
             return timestamp.sub(HEART_BEAT_START_TIME).div(EPOCH_PERIOD).add(1);
         }
@@ -33,7 +33,7 @@ abstract contract Pacemaker {
         @notice Displays timestamp when a given epoch began
         @return uint256 : Epoch start time
     */
-    function epochStartTimeFromTimestamp(uint256 timestamp) public pure returns (uint256) {
+    function epochStartTimeFromTimestamp(uint256 timestamp) public pure virtual returns (uint256) {
         if (timestamp <= HEART_BEAT_START_TIME) {
             return HEART_BEAT_START_TIME;
         } else {
@@ -45,7 +45,7 @@ abstract contract Pacemaker {
         @notice Displays timestamp when a given epoch will end
         @return uint256 : Epoch end time
     */
-    function epochEndTimeFromTimestamp(uint256 timestamp) public pure returns (uint256) {
+    function epochEndTimeFromTimestamp(uint256 timestamp) public pure virtual returns (uint256) {
         if (timestamp < HEART_BEAT_START_TIME) {
             return HEART_BEAT_START_TIME;
         } else if (timestamp == HEART_BEAT_START_TIME) {

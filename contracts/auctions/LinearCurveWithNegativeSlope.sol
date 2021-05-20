@@ -44,6 +44,20 @@ abstract contract LinearCurveWithNegativeSlope is IAuctionCurve, Pacemaker, Owna
         }
     }
 
+    function epochFromTimestamp(uint256 timestamp) public pure override(IAuctionCurve, Pacemaker) returns (uint256) {
+        return super.epochFromTimestamp(timestamp);
+    }
+
+    function epochStartTimeFromTimestamp(uint256 timestamp) public pure override(IAuctionCurve, Pacemaker)
+    returns (uint256) {
+        return super.epochFromTimestamp(timestamp);
+    }
+
+    function epochEndTimeFromTimestamp(uint256 timestamp) public pure override(IAuctionCurve, Pacemaker)
+    returns (uint256) {
+        return super.epochFromTimestamp(timestamp);
+    }
+
     function currentEpoch() public view override(IAuctionCurve, Pacemaker) returns (uint256) {
         return super.currentEpoch();
     }

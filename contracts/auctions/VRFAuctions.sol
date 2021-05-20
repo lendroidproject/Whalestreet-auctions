@@ -13,6 +13,11 @@ abstract contract VRFAuctions is BaseAuctions, VRFConsumerBase {
 
     using SafeERC20 for IERC20;
 
+    // vrf
+    mapping(bytes32 => uint256) public requestIdToKeyId;
+    bytes32 internal keyHash;
+    uint256 internal fee;
+
     /**
      * Constructor inherits VRFConsumerBase
      */
@@ -29,6 +34,14 @@ abstract contract VRFAuctions is BaseAuctions, VRFConsumerBase {
             fee = vrfFee;
         }
 
+    function setKeyHash(bytes32 _keyhash) external override onlyOwner {
+        keyHash = _keyhash;
+    }
+
+    function setFee(uint256 _fee) external override onlyOwner {
+        fee = _fee;
+    }
+
     function purchase() external {
         require(keyMinter.currentOwner() == address(this), "{purchase} : Contract is not owner of distribution");
         require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
@@ -36,6 +49,7 @@ abstract contract VRFAuctions is BaseAuctions, VRFConsumerBase {
 
         // random number
         bytes32 requestId = requestRandomness(keyHash, fee, uint256(address(this)));
+        requestIdToKeyId[requestId] = defiKeys.length;
         DefiKey memory newKey = DefiKey({
             epoch: auctionCurve.currentEpoch(),
             amount: auctionCurve.y(defiKeys),
@@ -57,8 +71,9 @@ abstract contract VRFAuctions is BaseAuctions, VRFConsumerBase {
 
     // solhint-disable-next-line no-unused-vars
     function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-        requestIdToRandomness[requestId] = randomness;
-        DefiKey storage key = defiKeys[defiKeys.length - 1];
+        DefiKey storage key = defiKeys[requestIdToKeyId[requestId]];
+        // verify key
+        require(key.requestId == requestId, "{fulfillRandomness} : requestIds do not match");
         // mint nft
         (address tokenAddress, uint256 tokenId, uint256 feePercentage) = keyMinter.mintWithRandomness(
             percentageFromRandomness(randomness), key.account);

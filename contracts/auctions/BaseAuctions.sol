@@ -22,10 +22,6 @@ abstract contract BaseAuctions is IAuction, Ownable {
     IAuctionCurve public auctionCurve;
     IERC20 public purchaseToken;
     IRandomMinter public keyMinter;
-    // vrf
-    mapping(bytes32 => uint256) public requestIdToRandomness;
-    bytes32 internal keyHash;
-    uint256 internal fee;
     // events
     event PurchaseMade(address indexed account, uint256 indexed epoch, uint256 purchaseAmount);
 
@@ -33,14 +29,6 @@ abstract contract BaseAuctions is IAuction, Ownable {
         require(keyMinterAddress != address(0),
             "{setKeyMinter} : invalid keyMinterAddress");
         keyMinter = IRandomMinter(keyMinterAddress);
-    }
-
-    function setKeyHash(bytes32 _keyhash) external override onlyOwner {
-        keyHash = _keyhash;
-    }
-
-    function setFee(uint256 _fee) external override onlyOwner {
-        fee = _fee;
     }
 
     function transferKeyMinterOwnership(address newOwner) external override onlyOwner {
