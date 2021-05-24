@@ -42,11 +42,11 @@ contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
         require((randomResult > 0) && (randomResult <= 100), "Invalid randomResult");
         uint256 projectId;
         address artist;
-        if (randomResult > 0 && randomResult <= 10) {
+        if (randomResult > 0 && randomResult <= 15) {
             projectId = artblocksProjectIds[Rarity.LEGENDARY];
             artist = artblocksArtistAddresses[Rarity.LEGENDARY];
             feePercentage = feePercentages[Rarity.LEGENDARY];
-        } else if (randomResult > 15 && randomResult <= 30) {
+        } else if (randomResult > 15 && randomResult <= 50) {
             projectId = artblocksProjectIds[Rarity.UNIQUE];
             artist = artblocksArtistAddresses[Rarity.UNIQUE];
             feePercentage = feePercentages[Rarity.UNIQUE];
