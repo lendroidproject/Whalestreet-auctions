@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: https://github.com/lendroidproject/protocol.2.0/blob/master/LICENSE.md
-pragma solidity 0.7.5;
+pragma solidity 0.8.4;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "../../auctions/IRandomMinter.sol";
-import "./IGenArt721Core.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import {Modifiers} from "../../libraries/LibAppStorage.sol";
+import "../../interfaces/IGenArt721Core.sol";
 
 
-contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
+contract ArtBlocksKeyMinterFaucet is Modifiers {
 
     enum Rarity { REGULAR, UNIQUE, LEGENDARY }
 
@@ -18,7 +18,7 @@ contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
     IGenArt721Core public auctionToken;
 
     // solhint-disable-next-line func-visibility
-    constructor(address[4] memory artblocksAndArtistAddresses) {
+    function init(address[4] memory artblocksAndArtistAddresses) internal {
         artblocksProjectIds[Rarity.REGULAR] = 43;
         artblocksProjectIds[Rarity.UNIQUE] = 44;
         artblocksProjectIds[Rarity.LEGENDARY] = 45;
@@ -31,11 +31,7 @@ contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
         auctionToken = IGenArt721Core(artblocksAndArtistAddresses[0]);
     }
 
-    function currentOwner() external view override returns (address) {
-        return owner();
-    }
-
-    function mintWithRandomness(uint256 randomResult, address to) public onlyOwner override returns(
+    function mintWithRandomness(uint256 randomResult, address to) internal returns(
         address newTokenAddress, uint256 newTokenId, uint256 feePercentage) {
         newTokenAddress = address(auctionToken);
         require(newTokenAddress != address(0), "auctionToken address is zero");
@@ -56,11 +52,6 @@ contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
             feePercentage = feePercentages[Rarity.REGULAR];
         }
         newTokenId = auctionToken.mint(to, projectId, artist);
-    }
-
-    function transferOwnership(address newOwner) public override(IRandomMinter, Ownable) onlyOwner {
-        require(newOwner != address(0), "{transferOwnership} : invalid new owner");
-        super.transferOwnership(newOwner);
     }
 
 }

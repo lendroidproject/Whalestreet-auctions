@@ -1,14 +1,15 @@
 // SPDX-License-Identifier: https://github.com/lendroidproject/protocol.2.0/blob/master/LICENSE.md
-pragma solidity 0.7.5;
+pragma solidity 0.8.4;
 
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 
 // solhint-disable-next-line
-contract AuctionToken is ERC721, Ownable {
+contract AuctionToken is ERC721URIStorage, Ownable {
 
     using SafeMath for uint256;
     using Counters for Counters.Counter;

@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: https://github.com/lendroidproject/protocol.2.0/blob/master/LICENSE.md
-pragma solidity 0.7.5;
+pragma solidity 0.8.4;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "../../auctions/IRandomMinter.sol";
-import "./IERC721WhaleStreet.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import {Modifiers} from "../../libraries/LibAppStorage.sol";
+import "../../interfaces/IERC721WhaleStreet.sol";
 
 
-contract DefaultKeyMinter is IRandomMinter, Ownable {
+contract DefaultKeyMinterFaucet is Modifiers {
 
     enum Rarity { REGULAR, UNIQUE, LEGENDARY }
 
-    mapping(Rarity => string) internal tokenUris;
+    mapping(Rarity => string) public tokenUris;
 
     mapping(Rarity => uint256) public feePercentages;
 
     IERC721WhaleStreet public auctionToken;
 
     // solhint-disable-next-line func-visibility
-    constructor(address auctionTokenAddress) {
+    function init(address auctionTokenAddress) internal {
         tokenUris[Rarity.REGULAR] = "REGULAR";
         tokenUris[Rarity.UNIQUE] = "UNIQUE";
         tokenUris[Rarity.LEGENDARY] = "LEGENDARY";
@@ -27,11 +27,7 @@ contract DefaultKeyMinter is IRandomMinter, Ownable {
         auctionToken = IERC721WhaleStreet(auctionTokenAddress);
     }
 
-    function currentOwner() external view override returns (address) {
-        return owner();
-    }
-
-    function mintWithRandomness(uint256 randomResult, address to) public onlyOwner override returns(
+    function mintWithRandomness(uint256 randomResult, address to) internal returns(
         address newTokenAddress, uint256 newTokenId, uint256 feePercentage) {
         newTokenAddress = address(auctionToken);
         require(newTokenAddress != address(0), "auctionToken address is zero");
@@ -40,7 +36,7 @@ contract DefaultKeyMinter is IRandomMinter, Ownable {
         if (randomResult > 0 && randomResult <= 10) {
             tokenUri = tokenUris[Rarity.LEGENDARY];
             feePercentage = feePercentages[Rarity.LEGENDARY];
-        } else if (randomResult > 15 && randomResult <= 30) {
+        } else if (randomResult > 10 && randomResult <= 30) {
             tokenUri = tokenUris[Rarity.UNIQUE];
             feePercentage = feePercentages[Rarity.UNIQUE];
         } else {
@@ -49,11 +45,6 @@ contract DefaultKeyMinter is IRandomMinter, Ownable {
         }
         newTokenId = auctionToken.getNextTokenId();
         auctionToken.mintToAndSetTokenURI(to, tokenUri);
-    }
-
-    function transferOwnership(address newOwner) public override(IRandomMinter, Ownable) onlyOwner {
-        require(newOwner != address(0), "{transferOwnership} : invalid new owner");
-        super.transferOwnership(newOwner);
     }
 
 }

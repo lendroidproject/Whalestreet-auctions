@@ -1,16 +1,13 @@
 // SPDX-License-Identifier: https://github.com/lendroidproject/protocol.2.0/blob/master/LICENSE.md
-pragma solidity 0.7.5;
+pragma solidity 0.8.4;
 
-import "@openzeppelin/contracts/math/SafeMath.sol";
-
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 /** @title Pacemaker
     @author Lendroid Foundation
     @notice Smart contract based on which various events in the Protocol take place
     @dev Audit certificate : Pending
 */
-
-
 // solhint-disable-next-line
 abstract contract Pacemaker {
 
@@ -22,7 +19,7 @@ abstract contract Pacemaker {
         @notice Displays the epoch which contains the given timestamp
         @return uint256 : Epoch value
     */
-    function epochFromTimestamp(uint256 timestamp) public pure virtual returns (uint256) {
+    function epochFromTimestamp(uint256 timestamp) public pure returns (uint256) {
         if (timestamp > HEART_BEAT_START_TIME) {
             return timestamp.sub(HEART_BEAT_START_TIME).div(EPOCH_PERIOD).add(1);
         }
@@ -33,7 +30,7 @@ abstract contract Pacemaker {
         @notice Displays timestamp when a given epoch began
         @return uint256 : Epoch start time
     */
-    function epochStartTimeFromTimestamp(uint256 timestamp) public pure virtual returns (uint256) {
+    function epochStartTimeFromTimestamp(uint256 timestamp) public pure returns (uint256) {
         if (timestamp <= HEART_BEAT_START_TIME) {
             return HEART_BEAT_START_TIME;
         } else {
@@ -45,7 +42,7 @@ abstract contract Pacemaker {
         @notice Displays timestamp when a given epoch will end
         @return uint256 : Epoch end time
     */
-    function epochEndTimeFromTimestamp(uint256 timestamp) public pure virtual returns (uint256) {
+    function epochEndTimeFromTimestamp(uint256 timestamp) public pure returns (uint256) {
         if (timestamp < HEART_BEAT_START_TIME) {
             return HEART_BEAT_START_TIME;
         } else if (timestamp == HEART_BEAT_START_TIME) {
@@ -60,7 +57,7 @@ abstract contract Pacemaker {
         @dev Calculates the nth 8-hour window frame since the heartbeat's start time
         @return uint256 : Current epoch value
     */
-    function currentEpoch() public view virtual returns (uint256) {
+    function currentEpoch() public view returns (uint256) {
         return epochFromTimestamp(block.timestamp);// solhint-disable-line not-rely-on-time
     }
 

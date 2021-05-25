@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: https://github.com/lendroidproject/protocol.2.0/blob/master/LICENSE.md
-pragma solidity 0.7.5;
+pragma solidity 0.8.4;
 
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
