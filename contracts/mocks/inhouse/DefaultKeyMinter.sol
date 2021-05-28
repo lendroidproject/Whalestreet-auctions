@@ -2,11 +2,14 @@
 pragma solidity 0.7.5;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 import "../../auctions/IRandomMinter.sol";
 import "./IERC721WhaleStreet.sol";
 
 
 contract DefaultKeyMinter is IRandomMinter, Ownable {
+
+    using Address for address;
 
     enum Rarity { REGULAR, UNIQUE, LEGENDARY }
 
@@ -18,12 +21,13 @@ contract DefaultKeyMinter is IRandomMinter, Ownable {
 
     // solhint-disable-next-line func-visibility
     constructor(address auctionTokenAddress) {
+        require(auctionTokenAddress.isContract(), "{DefaultKeyMinter} : invalid auctionTokenAddress");
         tokenUris[Rarity.REGULAR] = "REGULAR";
         tokenUris[Rarity.UNIQUE] = "UNIQUE";
         tokenUris[Rarity.LEGENDARY] = "LEGENDARY";
-        feePercentages[Rarity.REGULAR] = 50;
+        feePercentages[Rarity.REGULAR] = 5;
         feePercentages[Rarity.UNIQUE] = 20;
-        feePercentages[Rarity.LEGENDARY] = 5;
+        feePercentages[Rarity.LEGENDARY] = 50
         auctionToken = IERC721WhaleStreet(auctionTokenAddress);
     }
 

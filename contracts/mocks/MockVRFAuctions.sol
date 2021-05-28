@@ -28,10 +28,10 @@ contract MockVRFAuctions is BaseAuctions, MockVRFConsumerBase {
             address vrfCoordinator, address linkToken, bytes32 vrfKeyHash, uint256 vrfFee
         )
         VRFConsumerBase(vrfCoordinator, linkToken) {// solhint-disable-line func-visibility
-            require(daoTreasuryAddress != address(0), "{VRFAuctions} : invalid daoTreasuryAddress");
-            require(auctionCurveAddress.isContract(), "{VRFAuctions} : invalid auctionCurveAddress");
-            require(purchaseTokenAddress.isContract(), "{VRFAuctions} : invalid purchaseTokenAddress");
-            require(keyMinterAddress.isContract(), "{VRFAuctions} : invalid keyMinterAddress");
+            require(daoTreasuryAddress != address(0), "{MockVRFAuctions} : invalid daoTreasuryAddress");
+            require(auctionCurveAddress.isContract(), "{MockVRFAuctions} : invalid auctionCurveAddress");
+            require(purchaseTokenAddress.isContract(), "{MockVRFAuctions} : invalid purchaseTokenAddress");
+            require(keyMinterAddress.isContract(), "{MockVRFAuctions} : invalid keyMinterAddress");
             daoTreasury = daoTreasuryAddress;
             auctionCurve = IAuctionCurve(auctionCurveAddress);
             purchaseToken = IERC20(purchaseTokenAddress);

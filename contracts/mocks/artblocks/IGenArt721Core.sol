@@ -8,4 +8,7 @@ pragma solidity 0.7.5;
 interface IGenArt721Core {
 
     function mint(address _to, uint256 _projectId, address _by) external returns (uint256 _tokenId);
+
+    function projectIdToArtistAddress(uint256 _projectId) external view returns (address _by);
+
 }
