@@ -12,6 +12,7 @@ contract MockVRFAuctions is BaseAuctions, MockVRFConsumerBase {
 
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
+    using Address for address;
 
     // vrf
     mapping(bytes32 => uint256) public requestIdToKeyId;
@@ -22,10 +23,16 @@ contract MockVRFAuctions is BaseAuctions, MockVRFConsumerBase {
      * Constructor inherits VRFConsumerBase
      */
     // solhint-disable-next-line func-visibility
-    constructor(address auctionCurveAddress, address purchaseTokenAddress, address keyMinterAddress,
+    constructor(address daoTreasuryAddress,
+            address auctionCurveAddress, address purchaseTokenAddress, address keyMinterAddress,
             address vrfCoordinator, address linkToken, bytes32 vrfKeyHash, uint256 vrfFee
         )
         VRFConsumerBase(vrfCoordinator, linkToken) {// solhint-disable-line func-visibility
+            require(daoTreasuryAddress != address(0), "{VRFAuctions} : invalid daoTreasuryAddress");
+            require(auctionCurveAddress.isContract(), "{VRFAuctions} : invalid auctionCurveAddress");
+            require(purchaseTokenAddress.isContract(), "{VRFAuctions} : invalid purchaseTokenAddress");
+            require(keyMinterAddress.isContract(), "{VRFAuctions} : invalid keyMinterAddress");
+            daoTreasury = daoTreasuryAddress;
             auctionCurve = IAuctionCurve(auctionCurveAddress);
             purchaseToken = IERC20(purchaseTokenAddress);
             keyMinter = IRandomMinter(keyMinterAddress);
@@ -47,8 +54,7 @@ contract MockVRFAuctions is BaseAuctions, MockVRFConsumerBase {
         require(currentPrice() > 0, "{purchase} : Current price is 0");
 
         // random number
-        /* bytes32 requestId = requestRandomness(keyHash, fee, uint256(address(this))); */
-        bytes32 requestId = bytes32(0);
+        bytes32 requestId = requestRandomness(keyHash, fee, uint256(address(this)));
         requestIdToKeyId[requestId] = defiKeys.length;
         DefiKey memory newKey = DefiKey({
             epoch: auctionCurve.currentEpoch(),
@@ -59,12 +65,19 @@ contract MockVRFAuctions is BaseAuctions, MockVRFConsumerBase {
             feePercentage: 0,
             account: msg.sender,
             requestId: requestId,
-            randomness: 0
+            randomness: uint256(requestId).mod(100)
         });
+
+        (address tokenAddress, uint256 tokenId, uint256 feePercentage) = keyMinter.mintWithRandomness(
+            percentageFromRandomness(newKey.randomness), newKey.account);
+        newKey.auctionTokenAddress = tokenAddress;
+        newKey.auctionTokenId = tokenId;
+        newKey.feePercentage = feePercentage;
+
         // save purchase
         defiKeys.push(newKey);
         // transfer fee
-        purchaseToken.safeTransferFrom(msg.sender, address(this), newKey.amount);
+        purchaseToken.safeTransferFrom(msg.sender, address(daoTreasury), newKey.amount);
 
         emit PurchaseMade(msg.sender, newKey.epoch, newKey.amount);
     }
@@ -73,17 +86,8 @@ contract MockVRFAuctions is BaseAuctions, MockVRFConsumerBase {
         return randomness.mod(100);
     }
 
-    // solhint-disable-next-line no-unused-vars
     function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-        DefiKey storage key = defiKeys[requestIdToKeyId[requestId]];
-        // verify key
-        require(key.requestId == requestId, "{fulfillRandomness} : requestIds do not match");
-        // mint nft
-        (address tokenAddress, uint256 tokenId, uint256 feePercentage) = keyMinter.mintWithRandomness(
-            percentageFromRandomness(randomness), key.account);
-        key.auctionTokenAddress = tokenAddress;
-        key.auctionTokenId = tokenId;
-        key.feePercentage = feePercentage;
-        key.randomness = randomness;
+        revert();
     }
+
 }

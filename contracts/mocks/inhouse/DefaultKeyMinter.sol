@@ -21,9 +21,9 @@ contract DefaultKeyMinter is IRandomMinter, Ownable {
         tokenUris[Rarity.REGULAR] = "REGULAR";
         tokenUris[Rarity.UNIQUE] = "UNIQUE";
         tokenUris[Rarity.LEGENDARY] = "LEGENDARY";
-        feePercentages[Rarity.REGULAR] = 5;
+        feePercentages[Rarity.REGULAR] = 50;
         feePercentages[Rarity.UNIQUE] = 20;
-        feePercentages[Rarity.LEGENDARY] = 50;
+        feePercentages[Rarity.LEGENDARY] = 5;
         auctionToken = IERC721WhaleStreet(auctionTokenAddress);
     }
 

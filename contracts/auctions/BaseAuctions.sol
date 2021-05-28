@@ -23,6 +23,8 @@ abstract contract BaseAuctions is IAuction, Ownable {
     IAuctionCurve public auctionCurve;
     IERC20 public purchaseToken;
     IRandomMinter public keyMinter;
+    // dao
+    address public daoTreasury;
     // events
     event PurchaseMade(address indexed account, uint256 indexed epoch, uint256 purchaseAmount);
 

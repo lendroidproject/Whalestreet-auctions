@@ -13,6 +13,7 @@ abstract contract VRFAuctions is BaseAuctions, VRFConsumerBase {
 
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
+    using Address for address;
 
     // vrf
     mapping(bytes32 => uint256) public requestIdToKeyId;
@@ -23,10 +24,16 @@ abstract contract VRFAuctions is BaseAuctions, VRFConsumerBase {
      * Constructor inherits VRFConsumerBase
      */
     // solhint-disable-next-line func-visibility
-    constructor(address auctionCurveAddress, address purchaseTokenAddress, address keyMinterAddress,
+    constructor(address daoTreasuryAddress,
+            address auctionCurveAddress, address purchaseTokenAddress, address keyMinterAddress,
             address vrfCoordinator, address linkToken, bytes32 vrfKeyHash, uint256 vrfFee
         )
         VRFConsumerBase(vrfCoordinator, linkToken) {// solhint-disable-line func-visibility
+            require(daoTreasuryAddress != address(0), "{VRFAuctions} : invalid daoTreasuryAddress");
+            require(auctionCurveAddress.isContract(), "{VRFAuctions} : invalid auctionCurveAddress");
+            require(purchaseTokenAddress.isContract(), "{VRFAuctions} : invalid purchaseTokenAddress");
+            require(keyMinterAddress.isContract(), "{VRFAuctions} : invalid keyMinterAddress");
+            daoTreasury = daoTreasuryAddress;
             auctionCurve = IAuctionCurve(auctionCurveAddress);
             purchaseToken = IERC20(purchaseTokenAddress);
             keyMinter = IRandomMinter(keyMinterAddress);
@@ -65,7 +72,7 @@ abstract contract VRFAuctions is BaseAuctions, VRFConsumerBase {
         // save purchase
         defiKeys.push(newKey);
         // transfer fee
-        purchaseToken.safeTransferFrom(msg.sender, address(this), newKey.amount);
+        purchaseToken.safeTransferFrom(msg.sender, address(daoTreasury), newKey.amount);
 
         emit PurchaseMade(msg.sender, newKey.epoch, newKey.amount);
     }

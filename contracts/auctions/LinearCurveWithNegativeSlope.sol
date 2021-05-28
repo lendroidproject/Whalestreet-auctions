@@ -11,7 +11,7 @@ import "./Structs.sol";
 
 
 // solhint-disable-next-line
-abstract contract LinearCurveWithNegativeSlope is IAuctionCurve, Pacemaker, Ownable {
+contract LinearCurveWithNegativeSlope is IAuctionCurve, Pacemaker, Ownable {
 
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
@@ -21,7 +21,7 @@ abstract contract LinearCurveWithNegativeSlope is IAuctionCurve, Pacemaker, Owna
 
     // solhint-disable-next-line func-visibility
     constructor() {
-        minY = 1;
+        minY = 1e18;
     }
 
     function setMaxY(uint256 value) external onlyOwner {
@@ -35,7 +35,7 @@ abstract contract LinearCurveWithNegativeSlope is IAuctionCurve, Pacemaker, Owna
     }
 
     function y(DefiKey[] calldata defiKeys) external view override returns (uint256 value) {
-        value = ((_y1(defiKeys).sub(1)).mul((EPOCH_PERIOD.sub(_x()))).add(EPOCH_PERIOD)).div(EPOCH_PERIOD);
+        value = ((_y1(defiKeys).sub(minY)).mul((EPOCH_PERIOD.sub(_x()))).add(EPOCH_PERIOD)).div(EPOCH_PERIOD);
         if (value > maxY) {
             value = maxY;
         }
@@ -71,7 +71,7 @@ abstract contract LinearCurveWithNegativeSlope is IAuctionCurve, Pacemaker, Owna
         if (defiKeys.length == 0) {
             return maxY;
         } else if (currentEpoch().sub(defiKeys[defiKeys.length - 1].epoch) == 1) {
-            return defiKeys[defiKeys.length - 1].epoch.mul(2);
+            return defiKeys[defiKeys.length - 1].amount.mul(2);
         } else {
             return defiKeys[defiKeys.length - 1].amount;
         }

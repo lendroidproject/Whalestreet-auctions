@@ -19,12 +19,12 @@ contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
 
     // solhint-disable-next-line func-visibility
     constructor(address[4] memory artblocksAndArtistAddresses) {
-        artblocksProjectIds[Rarity.REGULAR] = 43;
-        artblocksProjectIds[Rarity.UNIQUE] = 44;
-        artblocksProjectIds[Rarity.LEGENDARY] = 45;
-        feePercentages[Rarity.REGULAR] = 5;
+        artblocksProjectIds[Rarity.REGULAR] = 75;
+        artblocksProjectIds[Rarity.UNIQUE] = 76;
+        artblocksProjectIds[Rarity.LEGENDARY] = 76;
+        feePercentages[Rarity.REGULAR] = 50;
         feePercentages[Rarity.UNIQUE] = 20;
-        feePercentages[Rarity.LEGENDARY] = 50;
+        feePercentages[Rarity.LEGENDARY] = 5;
         artblocksArtistAddresses[Rarity.REGULAR] = artblocksAndArtistAddresses[1];
         artblocksArtistAddresses[Rarity.UNIQUE] = artblocksAndArtistAddresses[2];
         artblocksArtistAddresses[Rarity.LEGENDARY] = artblocksAndArtistAddresses[3];

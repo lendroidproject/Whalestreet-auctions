@@ -16,8 +16,6 @@ abstract contract MockVRFConsumerBase is VRFConsumerBase {
     function requestRandomness(bytes32 _keyHash, uint256 _fee, uint256 _seed) internal override
     returns (bytes32 requestId) {
         lastRequestId = lastRequestId.add(1);
-        uint256 randomness = lastRequestId % 100;
-        fulfillRandomness(bytes32(lastRequestId), randomness);
         return bytes32(lastRequestId);
     }
 
