@@ -15,7 +15,7 @@ contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
 
     mapping(Rarity => uint256) public artblocksProjectIds;
 
-    mapping(Rarity => uint256) public feePercentages;
+    mapping(Rarity => uint256) public daoTreasuryFeePercentages;
 
     IGenArt721Core public auctionToken;
 
@@ -25,9 +25,9 @@ contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
         artblocksProjectIds[Rarity.REGULAR] = 75;
         artblocksProjectIds[Rarity.UNIQUE] = 76;
         artblocksProjectIds[Rarity.LEGENDARY] = 77;
-        feePercentages[Rarity.REGULAR] = 5;
-        feePercentages[Rarity.UNIQUE] = 20;
-        feePercentages[Rarity.LEGENDARY] = 50;
+        daoTreasuryFeePercentages[Rarity.REGULAR] = 50;
+        daoTreasuryFeePercentages[Rarity.UNIQUE] = 25;
+        daoTreasuryFeePercentages[Rarity.LEGENDARY] = 5;
         auctionToken = IGenArt721Core(auctionTokenAddress);
     }
 
@@ -43,13 +43,13 @@ contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
         uint256 projectId;
         if (randomResult > 0 && randomResult <= 15) {
             projectId = artblocksProjectIds[Rarity.LEGENDARY];
-            feePercentage = feePercentages[Rarity.LEGENDARY];
+            feePercentage = daoTreasuryFeePercentages[Rarity.LEGENDARY];
         } else if (randomResult > 15 && randomResult <= 50) {
             projectId = artblocksProjectIds[Rarity.UNIQUE];
-            feePercentage = feePercentages[Rarity.UNIQUE];
+            feePercentage = daoTreasuryFeePercentages[Rarity.UNIQUE];
         } else {
             projectId = artblocksProjectIds[Rarity.REGULAR];
-            feePercentage = feePercentages[Rarity.REGULAR];
+            feePercentage = daoTreasuryFeePercentages[Rarity.REGULAR];
         }
         address artist = auctionToken.projectIdToArtistAddress(projectId);
         newTokenId = auctionToken.mint(to, projectId, artist);

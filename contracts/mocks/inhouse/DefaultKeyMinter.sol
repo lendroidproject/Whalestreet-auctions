@@ -15,7 +15,7 @@ contract DefaultKeyMinter is IRandomMinter, Ownable {
 
     mapping(Rarity => string) internal tokenUris;
 
-    mapping(Rarity => uint256) public feePercentages;
+    mapping(Rarity => uint256) public daoTreasuryFeePercentages;
 
     IERC721WhaleStreet public auctionToken;
 
@@ -25,9 +25,9 @@ contract DefaultKeyMinter is IRandomMinter, Ownable {
         tokenUris[Rarity.REGULAR] = "REGULAR";
         tokenUris[Rarity.UNIQUE] = "UNIQUE";
         tokenUris[Rarity.LEGENDARY] = "LEGENDARY";
-        feePercentages[Rarity.REGULAR] = 5;
-        feePercentages[Rarity.UNIQUE] = 20;
-        feePercentages[Rarity.LEGENDARY] = 50
+        daoTreasuryFeePercentages[Rarity.REGULAR] = 50;
+        daoTreasuryFeePercentages[Rarity.UNIQUE] = 25;
+        daoTreasuryFeePercentages[Rarity.LEGENDARY] = 5;
         auctionToken = IERC721WhaleStreet(auctionTokenAddress);
     }
 
@@ -43,13 +43,13 @@ contract DefaultKeyMinter is IRandomMinter, Ownable {
         string memory tokenUri;
         if (randomResult > 0 && randomResult <= 10) {
             tokenUri = tokenUris[Rarity.LEGENDARY];
-            feePercentage = feePercentages[Rarity.LEGENDARY];
+            feePercentage = daoTreasuryFeePercentages[Rarity.LEGENDARY];
         } else if (randomResult > 15 && randomResult <= 30) {
             tokenUri = tokenUris[Rarity.UNIQUE];
-            feePercentage = feePercentages[Rarity.UNIQUE];
+            feePercentage = daoTreasuryFeePercentages[Rarity.UNIQUE];
         } else {
             tokenUri = tokenUris[Rarity.REGULAR];
-            feePercentage = feePercentages[Rarity.REGULAR];
+            feePercentage = daoTreasuryFeePercentages[Rarity.REGULAR];
         }
         newTokenId = auctionToken.getNextTokenId();
         auctionToken.mintToAndSetTokenURI(to, tokenUri);
