@@ -35,7 +35,7 @@ contract LinearCurveWithNegativeSlope is IAuctionCurve, Pacemaker, Ownable {
     }
 
     function y(DefiKey[] calldata defiKeys) external view override returns (uint256 value) {
-        value = ((_y1(defiKeys).sub(minY)).mul((EPOCH_PERIOD.sub(_x()))).add(EPOCH_PERIOD)).div(EPOCH_PERIOD);
+        value = (_y1(defiKeys).mul(EPOCH_PERIOD.sub(_x())).add(EPOCH_PERIOD.mul(_x()))).div(EPOCH_PERIOD);
         if (value > maxY) {
             value = maxY;
         }
