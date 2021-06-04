@@ -7,6 +7,7 @@ pragma solidity 0.7.5;
  */
 interface IAuction {
     // admin functions
+    function setDaoTreasury(address daoTreasuryAddress) external;
     function setKeyMinter(address keyMinterAddress) external;
     function setAuctionCurve(address auctionCurveAddress) external;
     function transferKeyMinterOwnership(address newOwner) external;

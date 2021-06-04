@@ -22,9 +22,9 @@ contract ArtBlocksKeyMinter is IRandomMinter, Ownable {
     // solhint-disable-next-line func-visibility
     constructor(address auctionTokenAddress) {
         require(auctionTokenAddress.isContract(), "{ArtBlocksKeyMinter} : invalid auctionTokenAddress");
-        artblocksProjectIds[Rarity.REGULAR] = 75;
-        artblocksProjectIds[Rarity.UNIQUE] = 76;
-        artblocksProjectIds[Rarity.LEGENDARY] = 77;
+        artblocksProjectIds[Rarity.REGULAR] = 79;
+        artblocksProjectIds[Rarity.UNIQUE] = 80;
+        artblocksProjectIds[Rarity.LEGENDARY] = 81;
         daoTreasuryFeePercentages[Rarity.REGULAR] = 50;
         daoTreasuryFeePercentages[Rarity.UNIQUE] = 25;
         daoTreasuryFeePercentages[Rarity.LEGENDARY] = 5;

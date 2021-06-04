@@ -28,6 +28,12 @@ abstract contract BaseAuctions is IAuction, Ownable {
     // events
     event PurchaseMade(address indexed account, uint256 indexed epoch, uint256 purchaseAmount);
 
+    function setDaoTreasury(address daoTreasuryAddress) external override onlyOwner {
+        require(daoTreasuryAddress != address(0),
+            "{setDaoTreasury} : invalid daoTreasuryAddress");
+        daoTreasury = daoTreasuryAddress;
+    }
+
     function setKeyMinter(address keyMinterAddress) external override onlyOwner {
         require(keyMinterAddress != address(0),
             "{setKeyMinter} : invalid keyMinterAddress");
